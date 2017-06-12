@@ -1,9 +1,9 @@
 
-# react-native-menu
+# react-native-button-menu
 
 ## Getting started
 
-`$ npm install react-native-menu --save`
+`$ npm install react-native-button-menu --save`
 
 ### Mostly automatic installation
 
