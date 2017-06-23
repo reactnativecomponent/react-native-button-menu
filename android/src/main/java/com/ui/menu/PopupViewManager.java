@@ -3,6 +3,8 @@ package com.ui.menu;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -36,11 +39,12 @@ import java.util.List;
 
 public class PopupViewManager extends SimpleViewManager<TextView> {
 
+    final String TAG = "Menu";
     private String title;
     private ReactContext context;
     private String[] menu;
     private List<String> action;
-    private String[] icon;
+    private Drawable[] icon;
     private Type curType = Type.YBPopup;
 
     enum Type {
@@ -134,10 +138,15 @@ public class PopupViewManager extends SimpleViewManager<TextView> {
 
     @ReactProp(name = "icons")
     public void setIcons(TextView view, ReadableArray icons) {
+
         if (icons != null && icons.size() > 0) {
-            this.icon = new String[icons.size()];
+
+            this.icon = new Drawable[icons.size()];
             for (int i = 0; i < icons.size(); i++) {
-                this.icon[i] = icons.getString(i);
+                ReadableMap map = icons.getMap(i);
+                if (map.hasKey("uri")) {
+                    icon[i] = ImageLoader.loadImage(context, map.getString("uri"));
+                }
             }
         }
     }
@@ -158,8 +167,10 @@ public class PopupViewManager extends SimpleViewManager<TextView> {
     }
 
     @ReactProp(name = "icon")
-    public void setIcon(TextView view, String icon) {
-        view.setBackgroundResource(getDrawableById(icon));
+    public void setIcon(TextView view, ReadableMap icon) {
+        Log.i(TAG, "" + icon);
+        if (icon.hasKey("uri"))
+            view.setBackground(ImageLoader.loadImage(context, icon.getString("uri")));
     }
 
     @ReactProp(name = "title")
@@ -237,10 +248,10 @@ public class PopupViewManager extends SimpleViewManager<TextView> {
         if (menuList != null && menuList.length > 0) {
             for (int i = 0; i < menuList.length; i++) {
                 MenuItem menuItem = popup.getMenu().add(i, i, i, menuList[i]);
-                if (i < icon.length) {
-                    int id = getDrawableById(icon[i]);
-                    if (id != 0)
-                        menuItem.setIcon(id);
+                if (icon != null) {
+                    if (i < icon.length) {
+                        menuItem.setIcon(icon[i]);
+                    }
                 }
             }
         }
