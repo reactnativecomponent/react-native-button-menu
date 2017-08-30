@@ -16,7 +16,6 @@ public class RNMenuPackage implements ReactPackage {
       return Arrays.<NativeModule>asList(new RNMenuModule(reactContext));
     }
 
-    @Override
     public List<Class<? extends JavaScriptModule>> createJSModules() {
       return Collections.emptyList();
     }
