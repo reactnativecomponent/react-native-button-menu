@@ -1,8 +1,9 @@
 /**
  * Created by dowin on 2017/5/31.
  */
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { View, requireNativeComponent } from 'react-native';
+import PropTypes from 'prop-types';
 var resolveAssetSource = require('react-native/Libraries/Image/resolveAssetSource');
 export default class RCTMenu extends Component {
 
